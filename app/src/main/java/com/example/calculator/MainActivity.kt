@@ -8,6 +8,11 @@ import android.widget.EditText
 import android.widget.TextView
 import java.lang.NumberFormatException
 
+private const val CURRENT_OPERATION = "currentOperation"
+private const val CURRENT_OPERAND1 = "Operand1"
+private const val OPERAND1_STORED = "Operand1_Stored"
+
+
 class MainActivity : AppCompatActivity() {
     private lateinit var result: EditText
     private lateinit var newNumber: EditText
@@ -17,9 +22,22 @@ class MainActivity : AppCompatActivity() {
     private var operand1: Double? = null
     private var pendingOperation = "="
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        if (savedInstanceState.getBoolean(OPERAND1_STORED, false)) {
+            operand1 = savedInstanceState.getDouble(CURRENT_OPERAND1)
+        } else {
+            operand1 = null
+        }
+        pendingOperation = savedInstanceState.getString(CURRENT_OPERATION, "")
+        displayOperation.text = pendingOperation
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         result = findViewById(R.id.result)
         newNumber = findViewById(R.id.newNumber)
@@ -80,6 +98,16 @@ class MainActivity : AppCompatActivity() {
         buttonDivide.setOnClickListener(opListener)
 
     }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(CURRENT_OPERATION, pendingOperation)
+        if (operand1 != null) {
+            outState?.putDouble(CURRENT_OPERAND1, operand1!!)
+            outState?.putBoolean(OPERAND1_STORED, true)
+        }
+    }
+
 
     private fun performOperation(value: Double, operation: String) {
         if (operand1 == null) {
