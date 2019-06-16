@@ -2,6 +2,7 @@ package com.example.calculator
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -39,12 +40,12 @@ class MainActivity : AppCompatActivity() {
 
         //  Operation Buttons
         val buttonEquals = findViewById<Button>(R.id.buttonEquals)
-        val buttonDevide = findViewById<Button>(R.id.buttonDevide)
+        val buttonDivide = findViewById<Button>(R.id.buttonDevide)
         val buttonMultiply = findViewById<Button>(R.id.buttonMultiply)
         val buttonPlus = findViewById<Button>(R.id.buttonPlus)
         val buttonSubtract = findViewById<Button>(R.id.buttonSubtract)
 
-        val listener = View.OnClickListener {v ->
+        val listener = View.OnClickListener { v ->
             val b = v as Button
             newNumber.append(b.text)
         }
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val opListener = View.OnClickListener { v ->
             val op = (v as Button).text.toString()
             val value = newNumber.text.toString()
-            if(value.isNotEmpty()){
+            if (value.isNotEmpty()) {
                 performOperation(value, op)
             }
             pendingOperation = op
@@ -75,12 +76,32 @@ class MainActivity : AppCompatActivity() {
         buttonSubtract.setOnClickListener(opListener)
         buttonPlus.setOnClickListener(opListener)
         buttonMultiply.setOnClickListener(opListener)
-        buttonDevide.setOnClickListener(opListener)
+        buttonDivide.setOnClickListener(opListener)
 
     }
 
-    private fun performOperation(value: String, operation: String){
-        displayOperation.text = operation
+    private fun performOperation(value: String, operation: String) {
+        if (operand1 == null) {
+            operand1 = value.toDouble()
+        } else {
+            operand2 = value.toDouble()
+            if (pendingOperation == "=") {
+                pendingOperation = operation
+            }
+            when (pendingOperation) {
+                "=" -> operand1 = operand2
+                "/" -> if (operand2 == 0.0) {
+                    operand1 = Double.NaN // handle attempt to divide by zero
+                } else {
+                    operand1 = operand1!! / operand2
+                }
+                "*" -> operand1 = operand1!! * operand2
+                "-" -> operand1 = operand1!! - operand2
+                "+" -> operand1 = operand1!! + operand2
+            }
+        }
+        result.setText(operand1.toString())
+        newNumber.setText("")
     }
 
 }
