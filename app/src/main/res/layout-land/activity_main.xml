@@ -18,6 +18,8 @@
         android:focusableInTouchMode="false"
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/newNumber"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -216,9 +218,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/result"
         app:layout_constraintEnd_toStartOf="@+id/result"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
